@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-lww51n%k#o_o)#06rn226=tj*#dv^7!l=7c9&z52-(1y-c)!sw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ '127.0.0.1', 'localhost', 'health.xempre.com', ]
 
 
 # Application definition
@@ -37,11 +37,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'corsheaders',
+    'rest_framework',
+    'users',
+    'measurements',
 ]
+
+AUTH_USER_MODEL = 'users.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -49,6 +56,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+# CORS_ALLOWED_ORIGINS = ['http://localhost:4200',]
 ROOT_URLCONF = 'PressurelessHealthAPI.urls'
 
 TEMPLATES = [
@@ -67,6 +75,28 @@ TEMPLATES = [
     },
 ]
 
+LOGGING = {
+    'version': 1,
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+        }
+    },
+    'loggers': {
+        'django.db.backends': {
+            'level': 'DEBUG',
+            'handlers': ['console'],
+        }
+    }
+}
+
 WSGI_APPLICATION = 'PressurelessHealthAPI.wsgi.application'
 
 
@@ -74,9 +104,18 @@ WSGI_APPLICATION = 'PressurelessHealthAPI.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+    
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'pressureless_health',
+        'USER': 'pressureless_dev',
+        'PASSWORD': 'MVCDevHealth2023#',
+        'HOST': 'health.xempre.com',
+        'PORT': '3306',
     }
 }
 
@@ -116,6 +155,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = '/var/www/ceplogistics/backend/app/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
