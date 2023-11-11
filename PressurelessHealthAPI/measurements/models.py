@@ -5,7 +5,7 @@ from users.models import *
 class Measurement(models.Model):
     idMeasurement = models.AutoField(primary_key = True)
     idUser = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
-    creationDate = models.DateTimeField(auto_now_add = True, null = False)
+    measurementDate = models.DateTimeField(null = False)
     updatedate = models.DateTimeField(auto_now = True, null = False)
     systolicPressure = models.DecimalField(null = False, max_digits = 5, decimal_places = 2)
     diastolicPressure = models.DecimalField(null = False, max_digits = 5, decimal_places = 2)

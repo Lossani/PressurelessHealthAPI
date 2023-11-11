@@ -3,6 +3,7 @@ from .models import *
 from django.utils.translation import gettext as _
 
 class MeasurementSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Measurement
         fields = '__all__'
