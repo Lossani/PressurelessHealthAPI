@@ -9,7 +9,12 @@ router = routers.DefaultRouter()
 # router.register('departamento', DepartamentoViewSet, 'departamento')
 # router.register('provincia', ProvinciaViewSet, 'provincia')
 # router.register('distrito', DistritoViewSet, 'distrito')
-router.register('all', MeasurementViewSet, 'measurements')
+router.register('requirements', RequirementViewSet, 'requirements')
+router.register('goals', GoalViewSet, 'goals')
+# router.register('goal_requirements', GoalRequirementViewSet, 'goal_requirements')
+router.register('challenges', ChallengeViewSet, 'challenges')
+# router.register('challenge_requirements', ChallengeViewSet, 'challenge_requirements')
+
 
 urlpatterns = [
     # path('getDepartamento/<idPais>', getDepartamento, name= 'getDepartamento'),

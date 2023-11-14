@@ -39,11 +39,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'corsheaders',
     'rest_framework',
-    'users',
-    'measurements',
+    'core',
+    'health',
+    'gamification',
 ]
 
-AUTH_USER_MODEL = 'users.User'
+AUTH_USER_MODEL = 'core.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -111,7 +112,7 @@ DATABASES = {
     
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pressureless_health',
+        'NAME': 'pressureless_health_dev',
         'USER': 'pressureless_dev',
         'PASSWORD': 'MVCDevHealth2023#',
         'HOST': 'health.xempre.com',

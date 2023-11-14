@@ -7,12 +7,12 @@ class MeasurementViewSet(ListFilterViewSet):
     allowed_filter_params = [
         {
             'name': 'measurement_date_start',
-            'field': 'measurementDate',
+            'field': 'measurement_date',
             'type': '__gte',
         },
         {
             'name': 'measurement_date_end',
-            'field': 'measurementDate',
+            'field': 'measurement_date',
             'type': '__lte',
         },
     ]
