@@ -5,6 +5,7 @@ from .constants import WEEKDAY
 from .managers import CustomUserManager
 from gamification.models import *
 from datetime import datetime
+from django.utils import timezone as dtz
 
 # Create your models here.
 
@@ -89,8 +90,9 @@ class GoalHistory(models.Model):
 class ChallengeHistory(models.Model):
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
     challenge = models.ForeignKey(Challenge, on_delete = models.DO_NOTHING, null = False)
-    event_date = models.DateTimeField(null = False, default = datetime.now())
-    succeeded = models.DateTimeField(null = False)
+    start_date = models.DateTimeField(null = False, default = dtz.now())
+    end_date = models.DateTimeField(null = True)
+    succeeded = models.BooleanField(null = False, default = False)
 
 
 

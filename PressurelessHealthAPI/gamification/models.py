@@ -32,6 +32,7 @@ class Challenge(models.Model):
     name = models.CharField(null = False, max_length = 50)
     description = models.CharField(null = False, max_length = 255)
     image = models.CharField(null = False, max_length = 255)
+    reward = models.PositiveIntegerField(null = False)
     time_limit = models.BigIntegerField(null = True)
     enabled = models.BooleanField(null = False, default = True)
     requirements = models.ManyToManyField(Requirement)

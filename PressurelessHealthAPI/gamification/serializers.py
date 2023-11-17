@@ -15,7 +15,7 @@ class RequirementSerializer(serializers.ModelSerializer):
 
 
 class GoalSerializer(serializers.ModelSerializer):
-    # requirements = RequirementSerializer(many = True, read_only = True, source = 'requirement_set')
+    requirements = RequirementSerializer(RequirementSerializer, many = True, read_only = True)
     
     class Meta:
         model = Goal
@@ -36,6 +36,7 @@ class GoalSerializer(serializers.ModelSerializer):
 
 
 class ChallengeSerializer(serializers.ModelSerializer):
+    requirements = RequirementSerializer(many = True, read_only = True)
     
     class Meta:
         model = Challenge

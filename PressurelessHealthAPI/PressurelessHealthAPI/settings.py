@@ -112,7 +112,7 @@ DATABASES = {
     
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pressureless_health_dev',
+        'NAME': 'pressureless_health',
         'USER': 'pressureless_dev',
         'PASSWORD': 'MVCDevHealth2023#',
         'HOST': 'health.xempre.com',
@@ -145,11 +145,11 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Lima'
 
 USE_I18N = True
 
-USE_TZ = True
+USE_TZ = False
 
 
 # Static files (CSS, JavaScript, Images)

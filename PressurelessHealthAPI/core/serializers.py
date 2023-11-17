@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from django.utils.translation import gettext as _
+from gamification.serializers import *
 
 
 
@@ -8,7 +9,8 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('password', 'is_superuser', 'is_staff', 'groups', 'user_permissions')
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )
 
@@ -55,7 +57,7 @@ class ReminderSerializer(serializers.ModelSerializer):
 
 
 class GoalHistorySerializer(serializers.ModelSerializer):
-
+    goal = GoalSerializer(read_only = True)
     class Meta:
         model = GoalHistory
         fields = '__all__'
@@ -65,7 +67,7 @@ class GoalHistorySerializer(serializers.ModelSerializer):
 
 
 class ChallengeHistorySerializer(serializers.ModelSerializer):
-
+    challenge = ChallengeSerializer(read_only = True)
     class Meta:
         model = ChallengeHistory
         fields = '__all__'

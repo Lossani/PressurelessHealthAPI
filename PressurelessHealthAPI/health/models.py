@@ -13,4 +13,5 @@ class Measurement(models.Model):
     heart_rate = models.IntegerField(null = True)
     temperature = models.IntegerField(null = True)
     blood_oxygen = models.IntegerField(null = True)
+    used_recommended_method = models.BooleanField(null = False, default = False)
     # wearable = models.ForeignKey(Wearable, on_delete = models.DO_NOTHING, null = False)

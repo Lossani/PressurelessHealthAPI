@@ -1,6 +1,7 @@
 from .serializers import *
 from .models import *
 from rest_framework import viewsets
+from PressurelessHealthAPI.api import *
 
 
 
@@ -59,23 +60,23 @@ class ReminderViewSet(viewsets.ModelViewSet):
 
 
 
-class GoalHistoryViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
+class GoalHistoryViewSet(ListFilterViewSet):
+    allowed_filter_params = [{ 'field': 'goal', 'type': ''}]
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
-    queryset = GoalHistory.objects.all()
+    queryset = GoalHistory.objects.prefetch_related('goal', 'goal__requirements').all()
     serializer_class = GoalHistorySerializer
     http_method_names = [ 'get', 'post', 'put', 'patch']
 
 
 
-class ChallengeHistoryViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
+class ChallengeHistoryViewSet(ListFilterViewSet):
+    allowed_filter_params = [{ 'field': 'succeeded', 'type': ''}, { 'field': 'challenge', 'type': ''}]
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
-    queryset = ChallengeHistory.objects.all()
+    queryset = ChallengeHistory.objects.prefetch_related('challenge', 'challenge__requirements').all()
     serializer_class = ChallengeHistorySerializer
     http_method_names = [ 'get', 'post', 'put', 'patch']
 
