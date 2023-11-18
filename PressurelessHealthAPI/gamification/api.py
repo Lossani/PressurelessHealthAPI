@@ -48,12 +48,15 @@ class ChallengeViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         calculate_challenge_requirements(User.objects.get(pk = 2))
         return super().list(request, *args, **kwargs)
+    
+    def partial_update(self, request, *args, **kwargs):
+        return super().partial_update(request, *args, **kwargs)
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     queryset = Challenge.objects.prefetch_related('requirements').all()
     serializer_class = ChallengeSerializer
-    http_method_names = [ 'get', 'post']
+    http_method_names = [ 'get', 'post', 'put']
 
 
 

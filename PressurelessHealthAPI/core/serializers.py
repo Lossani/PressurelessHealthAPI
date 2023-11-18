@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from gamification.functions import *
 from .models import *
 from django.utils.translation import gettext as _
 from gamification.serializers import *
@@ -68,6 +70,14 @@ class GoalHistorySerializer(serializers.ModelSerializer):
 
 class ChallengeHistorySerializer(serializers.ModelSerializer):
     challenge = ChallengeSerializer(read_only = True)
+    progress = serializers.SerializerMethodField()
+    
+    def get_progress(self, obj: ChallengeHistory):
+        if obj.succeeded:
+            return 100
+        return calculate_challenge_met_requirements_count(obj.user_id, obj.challenge, obj) / obj.challenge.requirements.count() * 100
+    
+    
     class Meta:
         model = ChallengeHistory
         fields = '__all__'

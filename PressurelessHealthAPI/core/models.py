@@ -90,7 +90,7 @@ class GoalHistory(models.Model):
 class ChallengeHistory(models.Model):
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
     challenge = models.ForeignKey(Challenge, on_delete = models.DO_NOTHING, null = False)
-    start_date = models.DateTimeField(null = False, default = dtz.now())
+    start_date = models.DateTimeField(null = False, default = dtz.now)
     end_date = models.DateTimeField(null = True)
     succeeded = models.BooleanField(null = False, default = False)
 

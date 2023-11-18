@@ -35,4 +35,6 @@ class Challenge(models.Model):
     reward = models.PositiveIntegerField(null = False)
     time_limit = models.BigIntegerField(null = True)
     enabled = models.BooleanField(null = False, default = True)
+    repeatable = models.BooleanField(null = False, default = False)
+    repetition_interval = models.PositiveIntegerField(null = True)
     requirements = models.ManyToManyField(Requirement)
