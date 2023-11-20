@@ -1,3 +1,4 @@
+from PressurelessHealthAPI.api import ListFilterViewSet
 from .serializers import *
 from .models import *
 from rest_framework import viewsets
@@ -5,7 +6,7 @@ from .views import *
 from .functions import *
 
 
-class RequirementViewSet(viewsets.ModelViewSet):
+class RequirementViewSet(ListFilterViewSet):
     allowed_filter_params = []
 
     # authentication_classes = (TokenAuthentication,)
@@ -16,8 +17,8 @@ class RequirementViewSet(viewsets.ModelViewSet):
 
 
 
-class GoalViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
+class GoalViewSet(ListFilterViewSet):
+    allowed_filter_params = [{ 'field': 'enabled', 'type': ''}]
     
     def list(self, request, *args, **kwargs):
         calculate_goal_requirements(User.objects.get(pk = 2))
@@ -42,8 +43,8 @@ class GoalViewSet(viewsets.ModelViewSet):
 
 
 
-class ChallengeViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
+class ChallengeViewSet(ListFilterViewSet):
+    allowed_filter_params = [{ 'field': 'enabled', 'type': ''}]
     
     def list(self, request, *args, **kwargs):
         calculate_challenge_requirements(User.objects.get(pk = 2))
