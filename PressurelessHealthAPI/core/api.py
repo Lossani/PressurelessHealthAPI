@@ -27,27 +27,6 @@ class ContactViewSet(viewsets.ModelViewSet):
 
 
 
-class MedicationViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
-
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
-    queryset = Medication.objects.all()
-    serializer_class = MedicationSerializer
-    http_method_names = [ 'get', 'post', 'put', 'patch']
-
-
-
-class MedicationFrequencyViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
-
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
-    queryset = MedicationFrequency.objects.all()
-    serializer_class = MedicationFrequencySerializer
-    http_method_names = [ 'get', 'post', 'put', 'patch']
-
-
 
 class ReminderViewSet(viewsets.ModelViewSet):
     allowed_filter_params = []

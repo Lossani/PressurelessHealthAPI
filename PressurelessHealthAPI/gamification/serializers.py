@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from django.utils.translation import gettext as _
+from core.serializers import *
 
 
 
@@ -16,7 +17,7 @@ class RequirementSerializer(serializers.ModelSerializer):
 
 class GoalSerializer(serializers.ModelSerializer):
     requirements = RequirementSerializer(RequirementSerializer, many = True, read_only = True)
-    
+
     class Meta:
         model = Goal
         fields = '__all__'
@@ -26,7 +27,7 @@ class GoalSerializer(serializers.ModelSerializer):
 
 
 # class GoalRequirementSerializer(serializers.ModelSerializer):
-    
+
 #     class Meta:
 #         model = GoalRequirement
 #         fields = '__all__'
@@ -37,7 +38,8 @@ class GoalSerializer(serializers.ModelSerializer):
 
 class ChallengeSerializer(serializers.ModelSerializer):
     requirements = RequirementSerializer(many = True, read_only = True)
-    
+    latest_history = ChallengeHistorySerializer(many = True, read_only = True)
+
     class Meta:
         model = Challenge
         fields = '__all__'

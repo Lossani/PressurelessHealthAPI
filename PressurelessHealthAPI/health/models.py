@@ -1,5 +1,7 @@
 from django.db import models
-from core.models import *
+from django.contrib.auth import get_user_model
+from .constants import WEEKDAY
+from core.models import User
 
 
 
@@ -15,3 +17,21 @@ class Measurement(models.Model):
     blood_oxygen = models.IntegerField(null = True)
     used_recommended_method = models.BooleanField(null = False, default = False)
     # wearable = models.ForeignKey(Wearable, on_delete = models.DO_NOTHING, null = False)
+
+
+
+class Medication(models.Model):
+    name = models.CharField(null = False, max_length = 50)
+    description = models.CharField(null = True, max_length = 50)
+
+    user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
+    deleted = models.BooleanField(null = False, default = True)
+
+
+
+class MedicationFrequency(models.Model):
+    medication = models.ForeignKey(Medication, on_delete = models.DO_NOTHING, null = False)
+    weekday = models.PositiveIntegerField(choices = WEEKDAY.choices, null = False)
+    hour = models.CharField(null = False, max_length = 50)
+    dose = models.CharField(null = False, max_length = 50)
+    deleted = models.BooleanField(null = False, default = True)

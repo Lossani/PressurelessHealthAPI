@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from .constants import WEEKDAY
 
 from .managers import CustomUserManager
 from gamification.models import *
@@ -54,32 +53,6 @@ class Contact(models.Model):
 
 
 
-class Medication(models.Model):
-    name = models.CharField(null = False, max_length = 50)
-    description = models.CharField(null = True, max_length = 50)
-
-    user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
-    deleted = models.BooleanField(null = False, default = True)
-
-
-
-class MedicationFrequency(models.Model):
-
-    medication = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
-    weekday = models.PositiveIntegerField(choices = WEEKDAY.choices, null = False)
-    hour = models.CharField(null = False, max_length = 50)
-    dose = models.CharField(null = False, max_length = 50)
-    deleted = models.BooleanField(null = False, default = True)
-
-
-
-class Reminder(models.Model):
-    medication_frequency = models.ForeignKey(User, on_delete = models.CASCADE, null = False)
-    active = models.BooleanField(null = False, default = True)
-    triggered_times = models.PositiveIntegerField(null = False, default = 0)
-
-
-
 class GoalHistory(models.Model):
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
     goal = models.ForeignKey(Goal, on_delete = models.DO_NOTHING, null = False)
@@ -93,6 +66,17 @@ class ChallengeHistory(models.Model):
     start_date = models.DateTimeField(null = False, default = dtz.now)
     end_date = models.DateTimeField(null = True)
     succeeded = models.BooleanField(null = False, default = False)
+
+
+
+from health.models import MedicationFrequency
+
+
+
+class Reminder(models.Model):
+    medication_frequency = models.ForeignKey(MedicationFrequency, on_delete = models.CASCADE, null = False)
+    active = models.BooleanField(null = False, default = True)
+    triggered_times = models.PositiveIntegerField(null = False, default = 0)
 
 
 

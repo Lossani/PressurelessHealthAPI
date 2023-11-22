@@ -10,6 +10,8 @@ router = routers.DefaultRouter()
 # router.register('provincia', ProvinciaViewSet, 'provincia')
 # router.register('distrito', DistritoViewSet, 'distrito')
 router.register(r'measurements/?', MeasurementViewSet, 'measurements')
+router.register(r'medications/?', MedicationViewSet, 'medications')
+router.register(r'medication_frequencies/?', MedicationFrequencyViewSet, 'medication_frequencies')
 
 urlpatterns = [
     # path('getDepartamento/<idPais>', getDepartamento, name= 'getDepartamento'),

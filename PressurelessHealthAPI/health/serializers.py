@@ -11,3 +11,23 @@ class MeasurementSerializer(serializers.ModelSerializer):
         fields = '__all__'
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )
+
+
+
+class MedicationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Medication
+        fields = '__all__'
+        # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
+        read_only_fields = ('id', )
+
+
+
+class MedicationFrequencySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = MedicationFrequency
+        fields = '__all__'
+        # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
+        read_only_fields = ('id', )

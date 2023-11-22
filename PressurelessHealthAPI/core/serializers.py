@@ -3,7 +3,6 @@ from rest_framework import serializers
 from gamification.functions import *
 from .models import *
 from django.utils.translation import gettext as _
-from gamification.serializers import *
 
 
 
@@ -28,26 +27,6 @@ class ContactSerializer(serializers.ModelSerializer):
 
 
 
-class MedicationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Medication
-        fields = '__all__'
-        # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
-        read_only_fields = ('id', )
-
-
-
-class MedicationFrequencySerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = MedicationFrequency
-        fields = '__all__'
-        # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
-        read_only_fields = ('id', )
-
-
-
 class ReminderSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -59,7 +38,9 @@ class ReminderSerializer(serializers.ModelSerializer):
 
 
 class GoalHistorySerializer(serializers.ModelSerializer):
-    goal = GoalSerializer(read_only = True)
+    # goal = GoalSerializer(read_only = True)
+    # goal_id = serializers.PrimaryKeyRelatedField(queryset = Goal.objects, source = 'goal')
+
     class Meta:
         model = GoalHistory
         fields = '__all__'
@@ -69,15 +50,15 @@ class GoalHistorySerializer(serializers.ModelSerializer):
 
 
 class ChallengeHistorySerializer(serializers.ModelSerializer):
-    challenge = ChallengeSerializer(read_only = True)
+    # challenge = ChallengeSerializer(read_only = True)
+    # challenge_id = serializers.PrimaryKeyRelatedField(queryset = Challenge.objects, source = 'challenge')
     progress = serializers.SerializerMethodField()
-    
+
     def get_progress(self, obj: ChallengeHistory):
         if obj.succeeded:
             return 100
-        return calculate_challenge_met_requirements_count(obj.user_id, obj.challenge, obj) / obj.challenge.requirements.count() * 100
-    
-    
+        return calculate_challenge_met_requirements_percent(obj.user_id, obj.challenge, obj) / obj.challenge.requirements.count() * 100
+
     class Meta:
         model = ChallengeHistory
         fields = '__all__'

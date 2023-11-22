@@ -3,6 +3,8 @@ from .models import *
 from rest_framework import viewsets
 from PressurelessHealthAPI.api import *
 
+
+
 class MeasurementViewSet(ListFilterViewSet):
     allowed_filter_params = [
         {
@@ -16,7 +18,7 @@ class MeasurementViewSet(ListFilterViewSet):
             'type': '__lte',
         },
     ]
-    
+
     def list(self, request):
         # currentUser = request.user
         filter_params = self._check_if_filter_present(request.GET)
@@ -37,15 +39,36 @@ class MeasurementViewSet(ListFilterViewSet):
             return JsonResponse(serializer.data, safe = False)
 
         return Response(data = serializer.data)
-    
-    
+
     def get_queryset(self):
         queryset = Measurement.objects.all()
 
         return queryset
-    
+
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
     # queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
-    http_method_names = ['get', 'post']
+    http_method_names = [ 'get', 'post']
+
+
+
+class MedicationViewSet(viewsets.ModelViewSet):
+    allowed_filter_params = []
+
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+    queryset = Medication.objects.all()
+    serializer_class = MedicationSerializer
+    http_method_names = [ 'get', 'post', 'put', 'patch']
+
+
+
+class MedicationFrequencyViewSet(viewsets.ModelViewSet):
+    allowed_filter_params = []
+
+    # authentication_classes = (TokenAuthentication,)
+    # permission_classes = (IsAuthenticated,)
+    queryset = MedicationFrequency.objects.all()
+    serializer_class = MedicationFrequencySerializer
+    http_method_names = [ 'get', 'post', 'put', 'patch']

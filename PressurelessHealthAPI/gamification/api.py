@@ -55,7 +55,19 @@ class ChallengeViewSet(ListFilterViewSet):
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
-    queryset = Challenge.objects.prefetch_related('requirements').all()
+    # queryset = Challenge.objects.prefetch_related('requirements').all()
+    
+    def get_queryset(self):
+        queryset = Challenge.objects.prefetch_related('requirements',
+                                                      Prefetch(
+                                                          'challengehistory_set',
+                                                          queryset = ChallengeHistory.objects.order_by('-pk')[:1],
+                                                          to_attr = 'latest_history'
+                                                      )
+                                                      ).all()
+
+        return queryset
+    
     serializer_class = ChallengeSerializer
     http_method_names = [ 'get', 'post', 'put']
 
