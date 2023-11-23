@@ -25,7 +25,7 @@ class Medication(models.Model):
     description = models.CharField(null = True, max_length = 50)
 
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
-    deleted = models.BooleanField(null = False, default = True)
+    deleted = models.BooleanField(null = False, default = False)
 
 
 

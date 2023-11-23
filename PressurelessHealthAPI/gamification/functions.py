@@ -77,6 +77,9 @@ def calculate_goal_requirements(user: User):
                 goal = goal,
                 reached_on = Subquery(Measurement.objects.filter(user = user).order_by('-pk').values('measurement_date')[:1])  #    last_measurement.measurement_date
             )
+            
+            user.points += goal.reward
+            user.save()
 
 
 
@@ -118,6 +121,8 @@ def calculate_challenge_requirements(user: User):
                     last_history.succeeded = True
                     last_history.end_date = datetime.now()
                     last_history.save()
+                    user.points += challenge.reward
+                    user.save()
                     # ChallengeHistory.objects.filter(user = user, challenge_id = challenge.pk, end_date__isnull = True).update(succeeded = True, end_date = datetime.now())
 
         if challenge.repeatable and (not last_history or (last_history and last_history.end_date)):

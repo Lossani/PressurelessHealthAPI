@@ -2,11 +2,16 @@ from .serializers import *
 from .models import *
 from rest_framework import viewsets
 from PressurelessHealthAPI.api import *
+from .functions import *
 
 
 
 class UserViewSet(viewsets.ModelViewSet):
     allowed_filter_params = [{ 'field': 'email', 'type': ''}]
+    
+    # def retrieve(self, request, pk = None, *args, **kwargs):
+    #     recalculate_user_points(User.objects.get(pk = int(pk)))
+    #     return super().retrieve(request, pk, *args, **kwargs)
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)

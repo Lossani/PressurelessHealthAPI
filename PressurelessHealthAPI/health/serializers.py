@@ -14,20 +14,21 @@ class MeasurementSerializer(serializers.ModelSerializer):
 
 
 
-class MedicationSerializer(serializers.ModelSerializer):
+class MedicationFrequencySerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Medication
+        model = MedicationFrequency
         fields = '__all__'
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )
 
 
 
-class MedicationFrequencySerializer(serializers.ModelSerializer):
+class MedicationSerializer(serializers.ModelSerializer):
+    frequencies = MedicationFrequencySerializer(many = True, source = 'medicationfrequency_set', read_only = True)
 
     class Meta:
-        model = MedicationFrequency
+        model = Medication
         fields = '__all__'
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )

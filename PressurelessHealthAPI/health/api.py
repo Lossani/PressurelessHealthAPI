@@ -58,14 +58,18 @@ class MedicationViewSet(viewsets.ModelViewSet):
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
-    queryset = Medication.objects.all()
+    queryset = Medication.objects.filter(deleted = False)
     serializer_class = MedicationSerializer
     http_method_names = [ 'get', 'post', 'put', 'patch']
 
 
 
-class MedicationFrequencyViewSet(viewsets.ModelViewSet):
-    allowed_filter_params = []
+class MedicationFrequencyViewSet(ListFilterViewSet):
+    allowed_filter_params = [
+        {
+            'field': 'medication',
+        },
+    ]
 
     # authentication_classes = (TokenAuthentication,)
     # permission_classes = (IsAuthenticated,)
