@@ -16,6 +16,7 @@ def generate_leaderboard(request):
             'first_name': u.first_name,
             'last_name': u.last_name,
             'username': u.username,
+            'avatar_url': u.avatar_url,
             'points': u.points
         } for u in users]
         

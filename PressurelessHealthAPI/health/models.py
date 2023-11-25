@@ -21,8 +21,8 @@ class Measurement(models.Model):
 
 
 class Medication(models.Model):
-    name = models.CharField(null = False, max_length = 50)
-    description = models.CharField(null = True, max_length = 50)
+    name = models.CharField(null = False, max_length = 250)
+    description = models.CharField(null = True, max_length = 1024)
 
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
     deleted = models.BooleanField(null = False, default = False)
@@ -33,5 +33,5 @@ class MedicationFrequency(models.Model):
     medication = models.ForeignKey(Medication, on_delete = models.DO_NOTHING, null = False)
     weekday = models.PositiveIntegerField(choices = WEEKDAY.choices, null = False)
     hour = models.CharField(null = False, max_length = 50)
-    dose = models.CharField(null = False, max_length = 50)
+    dose = models.CharField(null = False, max_length = 250)
     deleted = models.BooleanField(null = False, default = True)
