@@ -15,6 +15,7 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -24,11 +25,8 @@ SECRET_KEY = 'django-insecure-lww51n%k#o_o)#06rn226=tj*#dv^7!l=7c9&z52-(1y-c)!sw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    '127.0.0.1',
-    'localhost',
-    'health.xempre.com',
-]
+ALLOWED_HOSTS = [ '127.0.0.1', 'localhost', 'health.xempre.com', ]
+
 
 # Application definition
 
@@ -38,7 +36,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',  # 'corsheaders',
+    'django.contrib.staticfiles',
+    # 'corsheaders',
     'rest_framework',
     'core',
     'health',
@@ -49,7 +48,8 @@ AUTH_USER_MODEL = 'core.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',  # 'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -100,6 +100,7 @@ LOGGING = {
 
 WSGI_APPLICATION = 'PressurelessHealthAPI.wsgi.application'
 
+
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -108,15 +109,17 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pressureless_health',
         'USER': 'pressureless_dev',
         'PASSWORD': 'MVCDevHealth2023#',
-        'HOST': 'health.xempre.com',
+        'HOST': 'localhost',
         'PORT': '3306',
     }
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -136,6 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -147,11 +151,12 @@ USE_I18N = True
 
 USE_TZ = False
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = '/var/www/ceplogistics/backend/app/static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = '/var/www/pressureless_health/PressurelessHealthAPI/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
