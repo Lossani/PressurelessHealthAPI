@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-lww51n%k#o_o)#06rn226=tj*#dv^7!l=7c9&z52-(1y-c)!sw
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [ '127.0.0.1', 'localhost', 'health.xempre.com', ]
-
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    'health.xempre.com',
+]
 
 # Application definition
 
@@ -36,9 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    # 'corsheaders',
+    'django.contrib.staticfiles',  # 'corsheaders',
     'rest_framework',
+    'knox',
     'core',
     'health',
     'gamification',
@@ -46,10 +49,18 @@ INSTALLED_APPS = [
 
 AUTH_USER_MODEL = 'core.User'
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': ('knox.auth.TokenAuthentication', ),
+}
+
+REST_KNOX = {
+    'USER_SERIALIZER': 'core.serializers.UserSerializer',
+    'TOKEN_TTL': timedelta(days = 360),
+}
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',  # 'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -100,6 +111,12 @@ LOGGING = {
 
 WSGI_APPLICATION = 'PressurelessHealthAPI.wsgi.application'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'djangopruebaemail8@gmail.com'
+EMAIL_HOST_PASSWORD = 'yuwwaeptcjjnwkfy'  #Generar contraseña de aplicacion de gmail
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -109,17 +126,15 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pressureless_health',
         'USER': 'pressureless_dev',
         'PASSWORD': 'MVCDevHealth2023#',
-        'HOST': 'localhost',
+        'HOST': 'health.xempre.com',
         'PORT': '3306',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -139,7 +154,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -150,7 +164,6 @@ TIME_ZONE = 'America/Lima'
 USE_I18N = True
 
 USE_TZ = False
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/

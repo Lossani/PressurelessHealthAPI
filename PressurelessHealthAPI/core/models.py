@@ -23,6 +23,9 @@ class User(AbstractUser):
     gender = models.CharField(null = False, default = "Unspecified", max_length = 50)
     points = models.PositiveIntegerField(null = False, default = 0)
     avatar_url = models.CharField(null = False, max_length = 255)
+    email = models.EmailField(unique = True, null = False)
+    password_reset_code = models.CharField(null = True, max_length = 7)
+    password_reset_code_last_request = models.DateTimeField(null = True, default = None)
 
     # fechaCreacion = models.DateTimeField(auto_now_add = True, null = False)
     # fechaEdicion = models.DateTimeField(auto_now = True, null = False)

@@ -1,6 +1,9 @@
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from knox.auth import TokenAuthentication
+
 from .serializers import *
 from .models import *
-from rest_framework import viewsets
 from PressurelessHealthAPI.api import *
 
 
@@ -41,12 +44,12 @@ class MeasurementViewSet(ListFilterViewSet):
         return Response(data = serializer.data)
 
     def get_queryset(self):
-        queryset = Measurement.objects.all()
+        queryset = Measurement.objects.filter(user = self.request.user.pk)
 
         return queryset
 
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
     # queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
     http_method_names = [ 'get', 'post']
@@ -56,11 +59,15 @@ class MeasurementViewSet(ListFilterViewSet):
 class MedicationViewSet(viewsets.ModelViewSet):
     allowed_filter_params = []
 
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
-    queryset = Medication.objects.filter(deleted = False)
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+    # queryset = Medication.objects.filter(deleted = False)
     serializer_class = MedicationSerializer
     http_method_names = [ 'get', 'post', 'put', 'patch']
+
+    def get_queryset(self):
+        queryset = Medication.objects.filter(deleted = False, user = self.request.user.pk)
+        return queryset
 
 
 
@@ -71,8 +78,12 @@ class MedicationFrequencyViewSet(ListFilterViewSet):
         },
     ]
 
-    # authentication_classes = (TokenAuthentication,)
-    # permission_classes = (IsAuthenticated,)
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
     queryset = MedicationFrequency.objects.all()
     serializer_class = MedicationFrequencySerializer
     http_method_names = [ 'get', 'post', 'put', 'patch']
+
+    def get_queryset(self):
+        queryset = MedicationFrequency.objects.filter(medication__user = self.request.user.pk)
+        return queryset

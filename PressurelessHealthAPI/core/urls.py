@@ -1,10 +1,13 @@
 from rest_framework import routers
-from .views import *
 from django.urls import path
+from knox import views as knox_views
+
+from .views import *
 from .api import *
 
-router = routers.DefaultRouter()
 
+
+router = routers.DefaultRouter()
 
 # router.register('departamento', DepartamentoViewSet, 'departamento')
 # router.register('provincia', ProvinciaViewSet, 'provincia')
@@ -16,9 +19,11 @@ router.register(r'goal_history/?', GoalHistoryViewSet, 'goal_history')
 router.register(r'challenge_history/?', ChallengeHistoryViewSet, 'challenges_history')
 router.register(r'notification_history/?', NotificationHistoryViewSet, 'notifications_history')
 
-
 urlpatterns = [
-    # path('getDepartamento/<idPais>', getDepartamento, name= 'getDepartamento'),
-    # path('getProvincia/<idDepartamento>', getProvincia, name= 'getProvincia'),
-    # path('getDistrito/<idProvincia>', getDistrito, name= 'getDistrito'),
+    # KNOX Token
+    path(r'login/', LoginView.as_view(), name = 'knox_login'),
+    path(r'logout/', knox_views.LogoutView.as_view(), name = 'knox_logout'),
+    path(r'logoutall/', knox_views.LogoutAllView.as_view(), name = 'knox_logoutall'),
+    path(r'password_reset/', RetrievePasswordResetCode.as_view({'post': 'create'}), name = 'password_reset'),
+    path(r'password_change/', UserUpdatePassword.as_view({'put': 'update'}), name='password_change' )
 ] + router.urls
