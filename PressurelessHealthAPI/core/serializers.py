@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from gamification.functions import *
 from .models import *
-from django.utils.translation import gettext as _
 
 
 
@@ -21,13 +20,36 @@ class ContactSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Contact
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('user', )
+        read_only_fields = (
+            'id',
+            'user',
+        )
+        extra_kwargs = { 'user': { 'required': False } }
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )
 
 
 
-class ReminderSerializer(serializers.ModelSerializer):
+class BasicReminderSerializer(serializers.ModelSerializer):
+    medication_frequency_id = serializers.IntegerField()
+
+    class Meta:
+        model = Reminder
+        # fields = '__all__'
+        exclude = ('medication_frequency', )
+        # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
+        read_only_fields = ('id', )
+
+
+
+from health.serializers import BasicMedicationFrequencySerializer
+
+
+
+class DetailedReminderSerializer(serializers.ModelSerializer):
+    medication_frequency = BasicMedicationFrequencySerializer()
 
     class Meta:
         model = Reminder
@@ -54,6 +76,9 @@ class ChallengeHistorySerializer(serializers.ModelSerializer):
     # challenge_id = serializers.PrimaryKeyRelatedField(queryset = Challenge.objects, source = 'challenge')
     progress = serializers.SerializerMethodField()
 
+    # user = serializers.ModelField(ChallengeHistory.user, required = False, read_only = True)
+    # user_id = serializers.ModelField(ChallengeHistory.user_id, required = False, read_only = True)
+
     def get_progress(self, obj: ChallengeHistory):
         if obj.succeeded:
             return 100
@@ -61,9 +86,15 @@ class ChallengeHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChallengeHistory
-        fields = '__all__'
+        # fields = '__all__'
+        exclude = ('user', )
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
-        read_only_fields = ('id', )
+        read_only_fields = (
+            'id',
+            'user',
+            'start_date',
+        )
+        extra_kwargs = { 'user': { 'required': False } }
 
 
 

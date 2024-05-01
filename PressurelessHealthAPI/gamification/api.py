@@ -50,7 +50,7 @@ class ChallengeViewSet(ListFilterViewSet):
     allowed_filter_params = [{ 'field': 'enabled', 'type': ''}]
 
     def list(self, request, *args, **kwargs):
-        calculate_challenge_requirements(User.objects.get(pk = 2))
+        calculate_challenge_requirements(User.objects.get(pk = request.user.pk))
         return super().list(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
@@ -63,7 +63,8 @@ class ChallengeViewSet(ListFilterViewSet):
 
     def get_queryset(self):
         queryset = Challenge.objects.prefetch_related(
-            'requirements', Prefetch('challengehistory_set', queryset = ChallengeHistory.objects.order_by('-pk')[:1], to_attr = 'latest_history')
+            'requirements',
+            Prefetch('challengehistory_set', queryset = ChallengeHistory.objects.filter(user_id = self.request.user.pk).order_by('-pk')[:1], to_attr = 'latest_history')
         ).all()
 
         return queryset

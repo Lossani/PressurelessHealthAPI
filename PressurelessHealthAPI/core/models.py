@@ -48,13 +48,15 @@ class User(AbstractUser):
 
 class Contact(models.Model):
     first_name = models.CharField(null = False, max_length = 50)
-    last_name = models.CharField(null = False, max_length = 50)
-    email = models.CharField(null = False, max_length = 50)
+    last_name = models.CharField(null = True, max_length = 50)
+    email = models.CharField(null = True, max_length = 50)
     phone = models.CharField(null = False, max_length = 50)
     address = models.CharField(null = True, max_length = 50)
     relationship = models.CharField(null = True, max_length = 50)
 
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
+    
+    deleted = models.BooleanField(null = False, default = False)
 
 
 
@@ -79,7 +81,7 @@ from health.models import MedicationFrequency
 
 
 class Reminder(models.Model):
-    medication_frequency = models.ForeignKey(MedicationFrequency, on_delete = models.CASCADE, null = False)
+    medication_frequency = models.OneToOneField(MedicationFrequency, on_delete = models.CASCADE, null = False, primary_key = False)
     active = models.BooleanField(null = False, default = True)
     triggered_times = models.PositiveIntegerField(null = False, default = 0)
 

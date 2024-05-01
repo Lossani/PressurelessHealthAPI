@@ -27,11 +27,12 @@ def calculate_challenge_met_requirements_count(user_id: int, challenge: Challeng
 
     for req in requirements:
         if req.code == 'MEASUREMENT_AMOUNT':
-            time_limit = last_history.start_date.replace(tzinfo = None) + timedelta(seconds = req.time_limit) if req.time_limit else F('measurement_date')
+            time_limit = last_history.start_date + (
+                timedelta(seconds = req.time_limit) if req.time_limit else timedelta(seconds = challenge.time_limit)
+            )
 
-            if float(req.value) <= Measurement.objects.filter(user_id = user_id,
-                                                              measurement_date__gte = last_history.start_date.replace(tzinfo = None),
-                                                              measurement_date__lte = time_limit).count():
+            if Measurement.objects.filter(user_id = user_id, measurement_date__range = [last_history.start_date,
+                                                                                        time_limit]).count() >= int(req.value):
                 reqs_met_count += 1
 
     return reqs_met_count
@@ -46,11 +47,11 @@ def calculate_challenge_met_requirements_percent(user_id: int, challenge: Challe
 
         for req in requirements:
             if req.code == 'MEASUREMENT_AMOUNT':
-                time_limit = last_history.start_date.replace(tzinfo = None) + timedelta(seconds = req.time_limit) if req.time_limit else F('measurement_date')
+                time_limit = last_history.start_date + (
+                    timedelta(seconds = req.time_limit) if req.time_limit else timedelta(seconds = challenge.time_limit)
+                )
 
-                count_met = Measurement.objects.filter(
-                    user_id = user_id, measurement_date__gte = last_history.start_date.replace(tzinfo = None), measurement_date__lte = time_limit
-                ).count()
+                count_met = Measurement.objects.filter(user_id = user_id, measurement_date__range = [last_history.start_date, time_limit]).count()
 
                 total_count += int(req.value)
                 reqs_met_count += count_met
@@ -77,7 +78,7 @@ def calculate_goal_requirements(user: User):
                 goal = goal,
                 reached_on = Subquery(Measurement.objects.filter(user = user).order_by('-pk').values('measurement_date')[:1])  #    last_measurement.measurement_date
             )
-            
+
             user.points += goal.reward
             user.save()
 
@@ -106,7 +107,7 @@ def calculate_challenge_requirements(user: User):
         last_history = next(iter(challenge.histories), None)
 
         if last_history and not last_history.end_date:
-            limit_datetime = last_history.start_date.replace(tzinfo = None) + timedelta(seconds = challenge.time_limit)
+            limit_datetime = last_history.start_date + timedelta(seconds = challenge.time_limit)
 
             if limit_datetime < datetime.now():
                 last_history.succeeded = False
@@ -125,7 +126,10 @@ def calculate_challenge_requirements(user: User):
                     user.save()
                     # ChallengeHistory.objects.filter(user = user, challenge_id = challenge.pk, end_date__isnull = True).update(succeeded = True, end_date = datetime.now())
 
-        if challenge.repeatable and (not last_history or (last_history and last_history.end_date)):
+        next_reset_time = (last_history.end_date if last_history and last_history.end_date else datetime.now()) + timedelta(days = 1)
+        next_reset_time.replace(hour = 0, minute = 0, second = 0)
+        
+        if challenge.repeatable and (not last_history or (last_history and last_history.end_date and last_history.end_date >= next_reset_time)):
             # if not last_history or (last_history and last_history.end_date + timedelta(seconds = last_history.time_interval) < datetime.now()):
             #     new_start_date = datetime.now()
             # else:
@@ -153,7 +157,7 @@ def calculate_challenge_requirements(user: User):
         # if not challenge.repeatable or not last_history:
         #     continue
 
-        # limit_datetime = last_history.start_date.replace(tzinfo = None) + timedelta(seconds = challenge.time_limit)
+        # limit_datetime = last_history.start_date + timedelta(seconds = challenge.time_limit)
         # if limit_datetime < datetime.now():
         #     ChallengeHistory.objects.filter(user = user, challenge_id = challenge.pk, end_date__isnull = True).update(succeeded = False, end_date = limit_datetime)
         #     continue
