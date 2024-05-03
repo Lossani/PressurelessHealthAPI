@@ -45,9 +45,9 @@ class RetrievePasswordResetCode(viewsets.ViewSet):
                     last_request = datetime.now() - user.password_reset_code_last_request
                     
                     if last_request.seconds < 60:
-                        return Response({ "response": "You have requested the code in the last %s seconds, please wait at least a minute to request again." % (last_request.seconds)}, status = 403)
+                        return Response({ "response": "Ha solicitado el código hace %s segundos, debe esperar un minuto para solicitar otro." % (last_request.seconds)}, status = 403)
                 
-                asunto = "Pressureless Health - Cambia tu Contraseña"
+                asunto = "Apulso - Cambia tu Contraseña"
                 template = "template_change_password.html"
                 code = randint(1000000, 9999999)
                 user.password_reset_code = code
@@ -58,13 +58,13 @@ class RetrievePasswordResetCode(viewsets.ViewSet):
                     'code': code,
                 }
                 if enviar_correo(asunto, template, datos, [user.email]):
-                    return Response({ "response": "Email sent."}, status = 200)
+                    return Response({ "response": "Correo enviado."}, status = 200)
                 else:
-                    return Response({ "response": "Email sent."}, status = 500)
+                    return Response({ "response": "Correo no enviado."}, status = 500)
             else:
-                return Response({ "response": "User not found."}, status = 404)
+                return Response({ "response": "No existe usuario asociado."}, status = 404)
         else:
-            return Response({ "response": "Bad Request"}, status = 400)
+            return Response({ "response": "Solicitud incorrecta."}, status = 400)
 
 
 
@@ -79,16 +79,16 @@ class UserUpdatePassword(viewsets.ViewSet):
         user = User.objects.filter(email = email).first()
         
         if not user:
-            return Response({ "response": "User not found."}, status = 404)
+            return Response({ "response": "No existe usuario asociado."}, status = 404)
         
         if password and password_change_code:
             if user.password_reset_code == str(password_change_code):
                 user.set_password(password)
                 user.password_reset_code = None
                 user.save()
-                return Response({ "response": "Password changed successfuly."}, status = 200)
+                return Response({ "response": "Contraseña cambiada correctamente."}, status = 200)
             else:
-                return Response({ "response": "Password change code is not valid."}, status = 403)
+                return Response({ "response": "El código de cambio de contraseña no es válido."}, status = 403)
         
-        return Response({ "response": "Please provide email, password and password_change_code."}, status = 400)
+        return Response({ "response": "Por favor, ingrese el email del usuario, la contraseña nueva y el código de verificación."}, status = 400)
     

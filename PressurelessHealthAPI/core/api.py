@@ -29,10 +29,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         if User.objects.filter(username = request.data.get('username')).exists():
-            return Response({ "response": "Username already exists."}, status = 400)
+            return Response({ "response": "El usuario ingresado ya existe."}, status = 400)
 
         if User.objects.filter(email = request.data.get('email')).exists():
-            return Response({ "response": "Email already exists."}, status = 400)
+            return Response({ "response": "El email ingresado ya existe."}, status = 400)
 
         new_user = User.objects.create_user(**request.data, is_active = True)
         return Response(UserSerializer(new_user).data)
@@ -47,7 +47,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 user.set_password(password)
                 user.save()
             else:
-                return Response({ "response": "Password change code is not valid."}, status = 403)
+                return Response({ "response": "El código de cambio de contraseña no es válido."}, status = 403)
 
         return super().partial_update(request, *args, **kwargs)
 
