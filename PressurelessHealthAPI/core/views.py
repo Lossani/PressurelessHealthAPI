@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from datetime import datetime, timedelta
 from random import randint
 
@@ -92,3 +93,10 @@ class UserUpdatePassword(viewsets.ViewSet):
         
         return Response({ "response": "Por favor, ingrese el email del usuario, la contraseña nueva y el código de verificación."}, status = 400)
     
+    
+    
+def test(request):
+    asunto = "Apulso - Prueba"
+    template = "template_test.html"
+    
+    enviar_correo(asunto, template, {}, ['dev@xempre.com'])

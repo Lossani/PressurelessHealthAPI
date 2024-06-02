@@ -29,6 +29,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     'health.xempre.com',
+    '34.95.196.111',
 ]
 
 # Application definition
@@ -99,15 +100,29 @@ LOGGING = {
             'level': 'DEBUG',
             'filters': ['require_debug_true'],
             'class': 'logging.StreamHandler',
-        }
+        },
+        # 'mail_admins': {
+        #     'level': 'ERROR',
+        #     'class': 'django.utils.log.AdminEmailHandler',
+        #     'filters': [],
+        #     'include_html': True,
+        # },
     },
     'loggers': {
         'django.db.backends': {
             'level': 'DEBUG',
             'handlers': ['console'],
-        }
+        },
+        # 'django.request': {
+        #     'handlers': ['mail_admins'],
+        #     'level': 'ERROR',
+        #     'propagate': True,
+        # },
     }
 }
+
+ADMINS = [('Leonardo Molina', 'xemprino@gmail.com'), ('Leonardo Molina', 'lmolina@xempre.com'),]
+SERVER_EMAIL = 'Apulso App Error Handler <apulso@xempre.com>'
 
 WSGI_APPLICATION = 'PressurelessHealthAPI.wsgi.application'
 
@@ -115,8 +130,9 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'djangopruebaemail8@gmail.com'
-EMAIL_HOST_PASSWORD = 'yuwwaeptcjjnwkfy'  #Generar contraseña de aplicacion de gmail
+EMAIL_HOST_USER = 'lmolina@xempre.com'
+EMAIL_HOST_PASSWORD = 'bozodvazibsbcvxi'  #Generar contrase単a de aplicacion de gmail
+DEFAULT_FROM_EMAIL = 'Apulso App <apulso@xempre.com>'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -133,6 +149,10 @@ DATABASES = {
         'PASSWORD': 'MVCDevHealth2023#',
         'HOST': 'health.xempre.com',
         'PORT': '3306',
+        'OPTIONS': {
+            'charset': 'utf8mb4',
+            'use_unicode': True,
+        },
     }
 }
 

@@ -17,6 +17,12 @@ class RequirementSerializer(serializers.ModelSerializer):
 
 class GoalSerializer(serializers.ModelSerializer):
     requirements = RequirementSerializer(RequirementSerializer, many = True, read_only = True)
+    reached_on = serializers.SerializerMethodField()
+
+    # reached_on = GoalHistorySerializer(read_only = True, source = "latest_history")
+
+    def get_reached_on(self, obj: Goal):
+        return obj.latest_history[0].reached_on if obj.latest_history and len(obj.latest_history) > 0 else None
 
     class Meta:
         model = Goal
@@ -43,6 +49,16 @@ class ChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
         fields = '__all__'
+        # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
+        read_only_fields = ('id', )
+
+
+
+class BasicChallengeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Challenge
+        exclude = ('requirements', )
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )
 

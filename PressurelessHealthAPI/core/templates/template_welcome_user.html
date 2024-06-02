@@ -1,0 +1,19 @@
+{% autoescape on %}
+<div style="margin: 0 auto; display: grid;">
+    <h2>¡Bienvenido a Apulso!<h2>
+    <p>
+        Estimado {{ user.first_name }} {{ user.last_name }},
+        <br>
+        <br>
+        Gracias por registrarse en la aplicación.
+        <br>
+        <br>
+        Nombre de usuario: {{ user.username }}.
+        <br>
+        Inicie sesión con la contraseña que ingresó y comience con el control de su hipertensión.
+    </p>
+    <br>
+    <h4>Atentamente,</h4>
+    <h4>El equipo de Apulso</h4>
+</div>
+{% endautoescape %}

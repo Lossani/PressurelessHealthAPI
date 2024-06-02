@@ -1,3 +1,6 @@
+# -*- coding: utf-8 -*-
+from threading import Thread
+
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 from knox.auth import TokenAuthentication
@@ -35,6 +38,39 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({ "response": "El email ingresado ya existe."}, status = 400)
 
         new_user = User.objects.create_user(**request.data, is_active = True)
+
+        def __notificar_nuevo_usuario(user: User):
+            try:
+                asunto = "Apulso - Nuevo usuario registrado"
+                template = "template_new_user.html"
+                datos = {
+                    'user': user,
+                }
+                enviar_correo(asunto, template, datos, ['dev@xempre.com'])
+            except Exception as ex2:
+                print(ex2)
+                
+        def __enviar_correo_nuevo_usuario(user: User):
+            try:
+                asunto = "Bienvenido a Apulso"
+                template = "template_welcome_user.html"
+                datos = {
+                    'user': user,
+                }
+                enviar_correo(asunto, template, datos, ['dev@xempre.com'])
+            except Exception as ex2:
+                print(ex2)
+
+        try:
+            Thread(target = __notificar_nuevo_usuario, args = (new_user, )).start()
+        except Exception as ex:
+            print(ex)
+            
+        try:
+            Thread(target = __enviar_correo_nuevo_usuario, args = (new_user, )).start()
+        except Exception as ex:
+            print(ex)
+
         return Response(UserSerializer(new_user).data)
 
     def partial_update(self, request, pk = None, *args, **kwargs):
@@ -89,7 +125,8 @@ class ReminderViewSet(viewsets.ModelViewSet):
     http_method_names = [ 'get', 'post', 'put', 'patch']
 
     def get_queryset(self):
-        queryset = Reminder.objects.select_related('medication_frequency', 'medication_frequency__medication').filter(medication_frequency__medication__user = self.request.user.pk)
+        queryset = Reminder.objects.select_related('medication_frequency',
+                                                   'medication_frequency__medication').filter(medication_frequency__medication__user = self.request.user.pk)
         return queryset
 
 

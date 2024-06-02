@@ -29,7 +29,13 @@ class GoalViewSet(ListFilterViewSet):
 
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
-    queryset = Goal.objects.prefetch_related('requirements').all()
+
+    def get_queryset(self):
+        return Goal.objects.prefetch_related(
+            'requirements',
+            Prefetch('goalhistory_set', queryset = GoalHistory.objects.filter(user_id = self.request.user.pk).order_by('-pk')[:1], to_attr = "latest_history")
+        ).all()
+
     serializer_class = GoalSerializer
     http_method_names = [ 'get', 'post']
 

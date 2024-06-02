@@ -49,13 +49,15 @@ class MedicationFrequencySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         super().update(instance, validated_data)
 
-        Reminder.objects.update_or_create(
+        reminder, created = Reminder.objects.update_or_create(
             medication_frequency_id = instance.pk,
             defaults = {
                 'active': self.initial_data.get('reminder_notification_enabled', False),
             },
         )
-        instance.reminder
+        
+        instance.reminder = reminder
+        
         return instance
 
     class Meta:

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from random import randint
 
 from rest_framework import viewsets
@@ -10,6 +11,8 @@ from .serializers import *
 from .models import *
 from core.models import Reminder
 from PressurelessHealthAPI.api import *
+from gamification.functions import calculate_challenge_requirements
+from gamification.serializers import BasicChallengeSerializer
 
 
 
@@ -53,10 +56,23 @@ class MeasurementViewSet(ListFilterViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status = 400)
         serializer.save(user_id = request.user.pk)
-        return Response(serializer.data, status = 201)
+
+        completed_challenges, failed_challenges = calculate_challenge_requirements(request.user)
+
+        completed_challenges_serializer = BasicChallengeSerializer(data = completed_challenges, context = { 'request': request }, many = True)
+        failed_challenges_serializer = BasicChallengeSerializer(data = failed_challenges, context = { 'request': request }, many = True)
+
+        completed_challenges_serializer.is_valid()
+        failed_challenges_serializer.is_valid()
+
+        data = serializer.data
+        data['completed_challenges'] = completed_challenges_serializer.data
+        data['failed_challenges'] = failed_challenges_serializer.data
+
+        return Response(data, status = 201)
 
     def get_queryset(self):
-        queryset = Measurement.objects.filter(user = self.request.user.pk)
+        queryset = Measurement.objects.filter(user = self.request.user.pk, deleted = False)
 
         return queryset
 
@@ -64,7 +80,7 @@ class MeasurementViewSet(ListFilterViewSet):
     permission_classes = (IsAuthenticated, )
     # queryset = Measurement.objects.all()
     serializer_class = MeasurementSerializer
-    http_method_names = [ 'get', 'post']
+    http_method_names = [ 'get', 'post', 'patch']
 
 
 
@@ -82,12 +98,17 @@ class MedicationViewSet(viewsets.ModelViewSet):
         if not serializer.is_valid():
             return Response(serializer.errors, status = 400)
         serializer.save(user_id = request.user.pk)
+
         return Response(serializer.data, status = 201)
 
     def get_queryset(self):
         queryset = Medication.objects.filter(
             deleted = False, user = self.request.user.pk
-        ).prefetch_related(Prefetch('medicationfrequency_set', queryset = MedicationFrequency.objects.filter(deleted = False), to_attr = 'medication_frequencies'))
+        ).prefetch_related(
+            Prefetch(
+                'medicationfrequency_set', queryset = MedicationFrequency.objects.filter(deleted = False).order_by('hour', 'pk'), to_attr = 'medication_frequencies'
+            )
+        )
         return queryset
 
 
@@ -117,7 +138,7 @@ class MedicationFrequencyViewSet(ListFilterViewSet):
                 request.data.get('sunday', False),
         )):
             return Response({ "response": "Debe seleccionar al menos un día de la semana."}, status = 400)
-        
+
         if not serializer.is_valid():
             return Response(serializer.errors, status = 400)
 
@@ -126,7 +147,9 @@ class MedicationFrequencyViewSet(ListFilterViewSet):
         return Response(serializer.data, status = 201)
 
     def get_queryset(self):
-        queryset = MedicationFrequency.objects.select_related('reminder', 'medication').filter(medication__user = self.request.user.pk, deleted = False)
+        queryset = MedicationFrequency.objects.select_related('reminder', 'medication').filter(
+            medication__user = self.request.user.pk, deleted = False
+        ).order_by('hour', 'pk')
         return queryset
 
 

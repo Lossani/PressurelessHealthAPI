@@ -17,6 +17,7 @@ class Measurement(models.Model):
     blood_oxygen = models.IntegerField(null = True)
     used_recommended_method = models.BooleanField(null = False, default = False)
     comments = models.CharField(null = False, blank = True, max_length = 1024)
+    deleted = models.BooleanField(null = False, default = False)
     # wearable = models.ForeignKey(Wearable, on_delete = models.DO_NOTHING, null = False)
 
 

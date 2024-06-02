@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from random import randint
 
 from rest_framework.response import Response

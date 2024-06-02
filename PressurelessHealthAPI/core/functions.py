@@ -22,4 +22,5 @@ def enviar_correo(asunto, template, datos, email):
 
     correo = EmailMultiAlternatives(asunto, strip_tags(mensaje), to = email)
     correo.attach_alternative(mensaje, "text/html")
+    correo.from_email = "Apulso App <apulso@xempre.com>"
     return correo.send()

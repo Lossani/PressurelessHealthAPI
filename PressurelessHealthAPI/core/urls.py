@@ -25,5 +25,7 @@ urlpatterns = [
     path(r'logout/', knox_views.LogoutView.as_view(), name = 'knox_logout'),
     path(r'logoutall/', knox_views.LogoutAllView.as_view(), name = 'knox_logoutall'),
     path(r'password_reset/', RetrievePasswordResetCode.as_view({'post': 'create'}), name = 'password_reset'),
-    path(r'password_change/', UserUpdatePassword.as_view({'put': 'update'}), name='password_change' )
+    path(r'password_change/', UserUpdatePassword.as_view({'put': 'update'}), name='password_change' ),
+    # path(r'test/', test, name="test")
+    
 ] + router.urls
