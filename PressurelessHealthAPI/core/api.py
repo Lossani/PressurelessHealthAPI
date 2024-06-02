@@ -57,7 +57,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 datos = {
                     'user': user,
                 }
-                enviar_correo(asunto, template, datos, ['dev@xempre.com'])
+                enviar_correo(asunto, template, datos, [user.email])
             except Exception as ex2:
                 print(ex2)
 

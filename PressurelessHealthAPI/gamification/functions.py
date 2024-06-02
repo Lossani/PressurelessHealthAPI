@@ -136,8 +136,7 @@ def get_measurements_in_date_range(user: User, challenges: QuerySet[Challenge]):
 def calculate_challenge_requirements(user: User):
     challenges = Challenge.objects.filter(
         enabled = True
-    ).exclude(Q(repeatable = False)
-              & Q(Exists(ChallengeHistory.objects.filter(user = user, challenge_id = OuterRef('id'), end_date__isnull = False, succeeded = True)))).prefetch_related(
+    ).prefetch_related(
                   Prefetch('challengehistory_set', queryset = ChallengeHistory.objects.filter(user = user).order_by('-pk')[:1], to_attr = 'histories'), 'requirements'
               )
     # .annotate(
