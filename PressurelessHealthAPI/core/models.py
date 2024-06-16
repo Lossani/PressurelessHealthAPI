@@ -55,7 +55,7 @@ class Contact(models.Model):
     relationship = models.CharField(null = True, max_length = 50)
 
     user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = False)
-    
+
     deleted = models.BooleanField(null = False, default = False)
 
 
@@ -92,3 +92,9 @@ class NotificationHistory(models.Model):
     body = models.CharField(null = True, max_length = 50)
     send_date = models.DateTimeField(null = False)
     reminder = models.ForeignKey(Reminder, on_delete = models.DO_NOTHING, null = True)
+
+
+
+class DebugLog(models.Model):
+    text = models.TextField(null = False, blank = False)
+    user = models.ForeignKey(User, on_delete = models.DO_NOTHING, null = True, blank = True)

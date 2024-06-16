@@ -10,6 +10,7 @@ class Requirement(models.Model):
     value = models.CharField(null = False, max_length = 50)
     required = models.BooleanField(null = False, default = True)
     time_limit = models.CharField(null = True, max_length = 50)
+    distinct_days = models.BooleanField(null = False, default = False)
     # goal_required = models.ForeignKey(Goal, on_delete = models.CASCADE, null = True)
     
     
@@ -38,3 +39,4 @@ class Challenge(models.Model):
     repeatable = models.BooleanField(null = False, default = False)
     repetition_interval = models.PositiveIntegerField(null = True)
     requirements = models.ManyToManyField(Requirement)
+    order = models.IntegerField(null = False, default = 0)

@@ -49,7 +49,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 enviar_correo(asunto, template, datos, ['dev@xempre.com'])
             except Exception as ex2:
                 print(ex2)
-                
+
         def __enviar_correo_nuevo_usuario(user: User):
             try:
                 asunto = "Bienvenido a Apulso"
@@ -65,7 +65,7 @@ class UserViewSet(viewsets.ModelViewSet):
             Thread(target = __notificar_nuevo_usuario, args = (new_user, )).start()
         except Exception as ex:
             print(ex)
-            
+
         try:
             Thread(target = __enviar_correo_nuevo_usuario, args = (new_user, )).start()
         except Exception as ex:
@@ -179,4 +179,28 @@ class NotificationHistoryViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = NotificationHistory.objects.filter(user = self.request.user.pk)
+        return queryset
+
+
+
+class DebugLogViewSet(viewsets.ModelViewSet):
+    authentication_classes = (TokenAuthentication, )
+    permission_classes = (IsAuthenticated, )
+
+    serializer_class = DebugLogSerializer
+    http_method_names = ['post']
+
+    def create(self, request, *args, **kwargs):
+        serializer = DebugLogSerializer(data = request.data, context = { 'request': request })
+        if not serializer.is_valid():
+            return Response(serializer.errors, status = 400)
+
+        serializer.save(user_id = request.user.pk)
+
+        data = serializer.data
+
+        return Response(data, status = 201)
+
+    def get_queryset(self):
+        queryset = DebugLog.objects
         return queryset

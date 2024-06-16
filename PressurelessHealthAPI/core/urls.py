@@ -18,6 +18,7 @@ router.register(r'reminders/?', ReminderViewSet, 'reminders')
 router.register(r'goal_history/?', GoalHistoryViewSet, 'goal_history')
 router.register(r'challenge_history/?', ChallengeHistoryViewSet, 'challenges_history')
 router.register(r'notification_history/?', NotificationHistoryViewSet, 'notifications_history')
+router.register(r'debug_logs/?', DebugLogViewSet, 'debug_logs')
 
 urlpatterns = [
     # KNOX Token

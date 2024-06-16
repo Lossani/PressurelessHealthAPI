@@ -71,7 +71,7 @@ class ChallengeViewSet(ListFilterViewSet):
         queryset = Challenge.objects.prefetch_related(
             'requirements',
             Prefetch('challengehistory_set', queryset = ChallengeHistory.objects.filter(user_id = self.request.user.pk).order_by('-pk')[:1], to_attr = 'latest_history')
-        ).all()
+        ).order_by('order', 'pk').all()
 
         return queryset
 

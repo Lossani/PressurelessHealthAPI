@@ -131,7 +131,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'lmolina@xempre.com'
-EMAIL_HOST_PASSWORD = 'bozodvazibsbcvxi'  #Generar contrase単a de aplicacion de gmail
+EMAIL_HOST_PASSWORD = 'bozodvazibsbcvxi'  #Generar contraseña de aplicacion de gmail
 DEFAULT_FROM_EMAIL = 'Apulso App <apulso@xempre.com>'
 
 # Database
@@ -146,8 +146,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pressureless_health',
         'USER': 'pressureless_dev',
-        'PASSWORD': 'MVCDevHealth2023#',
-        'HOST': 'health.xempre.com',
+        'PASSWORD': 'DevHealth2023#',
+        'HOST': 'localhost',
         'PORT': '3306',
         'OPTIONS': {
             'charset': 'utf8mb4',

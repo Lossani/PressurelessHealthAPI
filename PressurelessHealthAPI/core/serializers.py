@@ -105,3 +105,12 @@ class NotificationHistorySerializer(serializers.ModelSerializer):
         fields = '__all__'
         # exclude = ('fechaCreacion', 'fechaEdicion', 'usuarioCreacion', 'usuarioEdicion', 'ipCreacion', 'ipEdicion')
         read_only_fields = ('id', )
+
+
+
+class DebugLogSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = DebugLog
+        fields = '__all__'
+        read_only_fields = ('id', )

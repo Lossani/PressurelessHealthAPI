@@ -35,11 +35,21 @@ def calculate_challenge_met_requirements_count(user_id: int, challenge: Challeng
     for req in requirements:
         if req.code == 'MEASUREMENT_AMOUNT':
             req_limit = last_history.start_date + (timedelta(seconds = req.time_limit) if req.time_limit else timedelta(seconds = challenge.time_limit))
-
             measurements_in_req_range = tuple(filter(lambda m: m.measurement_date <= req_limit, iter(measurements)))
 
-            if len(measurements_in_req_range) >= int(req.value):
-                reqs_met_count += 1
+            if not req.distinct_days:
+                if len(measurements_in_req_range) >= int(req.value):
+                    reqs_met_count += 1
+            else:
+                distinct_days = []
+
+                [
+                    distinct_days.append(m.measurement_date.date().strftime("%d/%m/%Y")) for m in measurements_in_req_range
+                    if m.measurement_date.date().strftime("%d/%m/%Y") not in distinct_days
+                ]
+
+                if len(distinct_days) >= int(req.value):
+                    reqs_met_count += 1
 
     return reqs_met_count
 
@@ -58,13 +68,25 @@ def calculate_challenge_met_requirements_percent(user_id: int, challenge: Challe
         for req in requirements:
             if req.code == 'MEASUREMENT_AMOUNT':
                 req_limit = last_history.start_date + (timedelta(seconds = req.time_limit) if req.time_limit else timedelta(seconds = challenge.time_limit))
-
                 measurements_in_req_range = tuple(filter(lambda m: m.measurement_date <= req_limit, iter(measurements_in_date_range)))
 
-                count_met = len(measurements_in_req_range)
+                if not req.distinct_days:
+                    count_met = len(measurements_in_req_range)
 
-                total_count += int(req.value)
-                reqs_met_count += count_met
+                    total_count += int(req.value)
+                    reqs_met_count += count_met
+                else:
+                    distinct_days = []
+
+                    [
+                        distinct_days.append(m.measurement_date.date().strftime("%d/%m/%Y")) for m in measurements_in_req_range
+                        if m.measurement_date.date().strftime("%d/%m/%Y") not in distinct_days
+                    ]
+
+                    count_met = len(distinct_days)
+
+                    total_count += int(req.value)
+                    reqs_met_count += count_met
 
         return reqs_met_count / total_count
     except:
@@ -134,11 +156,9 @@ def get_measurements_in_date_range(user: User, challenges: QuerySet[Challenge]):
 
 
 def calculate_challenge_requirements(user: User):
-    challenges = Challenge.objects.filter(
-        enabled = True
-    ).prefetch_related(
-                  Prefetch('challengehistory_set', queryset = ChallengeHistory.objects.filter(user = user).order_by('-pk')[:1], to_attr = 'histories'), 'requirements'
-              )
+    challenges = Challenge.objects.filter(enabled = True).prefetch_related(
+        Prefetch('challengehistory_set', queryset = ChallengeHistory.objects.filter(user = user).order_by('-pk')[:1], to_attr = 'histories'), 'requirements'
+    )
     # .annotate(
     #     start_time = Subquery(
     #         [:1]
@@ -165,11 +185,17 @@ def calculate_challenge_requirements(user: User):
             limit_datetime = last_history.start_date + timedelta(seconds = challenge.time_limit)
 
             if limit_datetime < datetime.now():
-                last_history.succeeded = False
-                last_history.end_date = limit_datetime
-                # last_history.save()
-                changed_histories.append(last_history)
-                failed_challenges.append(challenge)
+                expected_reset_time = datetime.now() + timedelta(days = 1)
+                expected_reset_time = expected_reset_time.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+                
+                # Solo cerrar como fallidos si ya pasó el tiempo de reseto esperado (Al 09/06/2024 solo hay un reto que se reinicia a diario)
+                # Ajustar en caso necesite distintas lógicas de reinicio automático.
+                if not challenge.repeatable or (challenge.repeatable and datetime.now() >= expected_reset_time):
+                    last_history.succeeded = False
+                    last_history.end_date = limit_datetime
+                    # last_history.save()
+                    changed_histories.append(last_history)
+                    failed_challenges.append(challenge)
                 # ChallengeHistory.objects.filter(user = user, challenge_id = challenge.pk, end_date__isnull = True).update(succeeded = False, end_date = limit_datetime)
             else:
                 reqs_met_count = calculate_challenge_met_requirements_count(user, challenge, last_history, measurements_in_date_range)
